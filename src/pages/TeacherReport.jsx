@@ -89,7 +89,7 @@ function PaGrid({ activadores, frenos }) {
   return (
     <div className="pa-grid">
       <div>
-        <div className="pa-sect pa-on">Lo que los prende</div>
+        <div className="pa-sect pa-on">Lo que los enciende</div>
         {activadores.map((a, i) => (
           <div key={a.key} className="pa-item">
             <div className="pa-name">{a.label}</div>

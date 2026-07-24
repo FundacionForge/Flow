@@ -119,6 +119,17 @@ export default function App() {
     setStep('quiz');
   }
 
+  function handleReset() {
+    [LS_STEP, LS_CURRENT_Q, LS_ANSWERS, LS_STARS, LS_COMMITMENT].forEach(k => localStorage.removeItem(k));
+    setStep('intro');
+    setCurrentQ(0);
+    setAnswers({});
+    setStars(null);
+    setCommit(null);
+    setSavedId(null);
+    setOdData(null);
+  }
+
   async function handleAnswer(questionId, letter) {
     const newAnswers = { ...answers, [questionId]: letter };
     setAnswers(newAnswers);
@@ -183,6 +194,7 @@ export default function App() {
             onStars={handleStars}
             commitment={commitment}
             onCommitment={handleCommitment}
+            onReset={handleReset}
           />
         )}
       </main>

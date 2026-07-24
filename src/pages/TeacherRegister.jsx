@@ -26,7 +26,7 @@ const COUNTRIES = [
 ];
 
 export default function TeacherRegister({ email, onRegistered }) {
-  const [form, setForm]     = useState({ name: '', institution: '', countryCode: '' });
+  const [form, setForm]     = useState({ firstName: '', lastName: '', institution: '', countryCode: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoad]  = useState(false);
   const [serverErr, setServerErr] = useState('');
@@ -38,9 +38,10 @@ export default function TeacherRegister({ email, onRegistered }) {
 
   function validate() {
     const e = {};
-    if (!form.name.trim())        e.name        = 'Ingresá tu nombre.';
-    if (!form.institution.trim()) e.institution = 'Ingresá el nombre de tu institución.';
-    if (!form.countryCode)        e.countryCode = 'Seleccioná tu país.';
+    if (!form.firstName.trim())    e.firstName   = 'Ingresá tu nombre.';
+    if (!form.lastName.trim())     e.lastName    = 'Ingresá tu apellido.';
+    if (!form.institution.trim())  e.institution = 'Ingresá el nombre de tu institución.';
+    if (!form.countryCode)         e.countryCode = 'Seleccioná tu país.';
     return e;
   }
 
@@ -51,7 +52,8 @@ export default function TeacherRegister({ email, onRegistered }) {
     setLoad(true);
     setServerErr('');
     try {
-      const profile = await createTeacherProfile({ ...form, email });
+      const name = `${form.firstName.trim()} ${form.lastName.trim()}`;
+      const profile = await createTeacherProfile({ ...form, name, email });
       onRegistered(profile);
     } catch {
       setServerErr('Ocurrió un error. Por favor intentá de nuevo.');
@@ -67,15 +69,28 @@ export default function TeacherRegister({ email, onRegistered }) {
         Es la primera vez que ingresás. Necesitamos algunos datos para crear tu cuenta.
       </p>
       <form className="teacher-form" onSubmit={handleSubmit}>
-        <div className="teacher-field">
-          <label htmlFor="tr-name">Nombre completo</label>
-          <input
-            id="tr-name" type="text" value={form.name}
-            onChange={e => set('name', e.target.value)}
-            placeholder="Tu nombre y apellido"
-            className={errors.name ? 'error' : ''}
-          />
-          {errors.name && <span className="teacher-error">{errors.name}</span>}
+        <div className="teacher-row-two">
+          <div className="teacher-field">
+            <label htmlFor="tr-firstname">Nombre</label>
+            <input
+              id="tr-firstname" type="text" value={form.firstName}
+              onChange={e => set('firstName', e.target.value)}
+              placeholder="Tu nombre"
+              className={errors.firstName ? 'error' : ''}
+              autoFocus
+            />
+            {errors.firstName && <span className="teacher-error">{errors.firstName}</span>}
+          </div>
+          <div className="teacher-field">
+            <label htmlFor="tr-lastname">Apellido</label>
+            <input
+              id="tr-lastname" type="text" value={form.lastName}
+              onChange={e => set('lastName', e.target.value)}
+              placeholder="Tu apellido"
+              className={errors.lastName ? 'error' : ''}
+            />
+            {errors.lastName && <span className="teacher-error">{errors.lastName}</span>}
+          </div>
         </div>
         <div className="teacher-field">
           <label htmlFor="tr-inst">Institución educativa</label>

@@ -18,7 +18,7 @@ function buildHeadline(activadorKey, frenoKey) {
   return `${actLargo}${complementoA}`;
 }
 
-export default function ReportView({ answers, stars, onStars, commitment, onCommitment }) {
+export default function ReportView({ answers, stars, onStars, commitment, onCommitment, onReset }) {
   const zones = calcZoneScores(answers);
   const { activadorPrincipal, frenoPrincipal } = calcTitleParts(answers);
   const { activadores, frenos } = calcPills(answers);
@@ -43,7 +43,7 @@ export default function ReportView({ answers, stars, onStars, commitment, onComm
 
         {activadores.length > 0 && (
           <div className="pills-section">
-            <div className="pills-label">Lo que te prende ⚡</div>
+            <div className="pills-label">Lo que te enciende ⚡</div>
             <div className="pills-row">
               {activadores.map(({ key, label }) => (
                 <span key={key} className="pill activador">✓ {label}</span>
@@ -99,6 +99,13 @@ export default function ReportView({ answers, stars, onStars, commitment, onComm
           <button className="print-btn" onClick={handlePrint}>
             🖨️ Imprimir / Descargar PDF
           </button>
+
+          {/* Reset temporal para pruebas */}
+          {onReset && (
+            <button className="reset-btn" onClick={onReset}>
+              ↺ Volver al inicio (resetear)
+            </button>
+          )}
         </div>
       )}
     </div>

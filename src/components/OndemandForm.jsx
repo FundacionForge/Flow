@@ -24,7 +24,7 @@ const COUNTRIES = [
   { code: 'OTHER', name: 'Otro' },
 ];
 
-export default function OndemandForm({ detectedCountry, onSubmit }) {
+export default function OndemandForm({ detectedCountry, onSubmit, submitLabel = 'Empezar →' }) {
   const [form, setForm] = useState({
     name: '',
     lastname: '',
@@ -130,7 +130,7 @@ export default function OndemandForm({ detectedCountry, onSubmit }) {
       </p>
 
       <button type="submit" className="btn-start">
-        Empezar →
+        {submitLabel}
       </button>
     </form>
   );

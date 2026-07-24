@@ -67,7 +67,7 @@ function IntroScreen({ collectData, detectedCountry, onStart }) {
         </div>
 
         {collectData && DATOS_MOMENTO === 'antes' ? (
-          <OndemandForm detectedCountry={detectedCountry} onSubmit={onStart} />
+          <OndemandForm detectedCountry={detectedCountry} onSubmit={onStart} submitLabel="Empezar →" />
         ) : (
           <button className="btn-start" onClick={() => onStart(null)}>
             Empezar →
@@ -91,7 +91,7 @@ function CollectScreen({ detectedCountry, onSubmit }) {
         <p className="intro-desc">
           Antes de ver tu reporte, completá estos datos. Solo los usamos para mejorar el programa.
         </p>
-        <OndemandForm detectedCountry={detectedCountry} onSubmit={onSubmit} />
+        <OndemandForm detectedCountry={detectedCountry} onSubmit={onSubmit} submitLabel="Ver mis resultados →" />
       </div>
     </div>
   );

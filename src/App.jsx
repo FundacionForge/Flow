@@ -5,6 +5,7 @@ import ReportView from './components/ReportView.jsx';
 import OndemandForm from './components/OndemandForm.jsx';
 import { detectCountry } from './services/geoip.js';
 import { insertResponse, updateStars, updateCommitment } from './services/responses.js';
+import { DATOS_MOMENTO } from './config.js';
 
 const LS_ANSWERS    = 'flow_answers';
 const LS_STARS      = 'flow_stars';
@@ -45,7 +46,7 @@ function Header() {
   );
 }
 
-function IntroScreen({ mode, detectedCountry, onStart }) {
+function IntroScreen({ collectData, detectedCountry, onStart }) {
   return (
     <div className="intro-screen">
       <div className="intro-hero">
@@ -65,7 +66,7 @@ function IntroScreen({ mode, detectedCountry, onStart }) {
           <span className="intro-chip">🔒 Tus respuestas son privadas</span>
         </div>
 
-        {mode === 'ondemand' ? (
+        {collectData && DATOS_MOMENTO === 'antes' ? (
           <OndemandForm detectedCountry={detectedCountry} onSubmit={onStart} />
         ) : (
           <button className="btn-start" onClick={() => onStart(null)}>
@@ -80,30 +81,45 @@ function IntroScreen({ mode, detectedCountry, onStart }) {
   );
 }
 
+function CollectScreen({ detectedCountry, onSubmit }) {
+  return (
+    <div className="intro-screen">
+      <div className="intro-hero">
+        <h1 className="intro-title" style={{ fontSize: '1.6rem' }}>
+          ¡Listo! Ya terminaste el cuestionario
+        </h1>
+        <p className="intro-desc">
+          Antes de ver tu reporte, completá estos datos. Solo los usamos para mejorar el programa.
+        </p>
+        <OndemandForm detectedCountry={detectedCountry} onSubmit={onSubmit} />
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const init = loadState();
-  const [step, setStep]           = useState(init.step);
-  const [currentQ, setCurrentQ]   = useState(init.currentQ);
-  const [answers, setAnswers]     = useState(init.answers);
-  const [stars, setStars]         = useState(init.stars);
-  const [commitment, setCommit]   = useState(init.commitment);
+  const [step, setStep]         = useState(init.step);
+  const [currentQ, setCurrentQ] = useState(init.currentQ);
+  const [answers, setAnswers]   = useState(init.answers);
+  const [stars, setStars]       = useState(init.stars);
+  const [commitment, setCommit] = useState(init.commitment);
 
-  // Fase 2
-  const [mode, setMode]               = useState(null);
   const [groupCode, setGroupCode]     = useState(null);
+  const [collectData, setCollectData] = useState(false);
   const [countryCode, setCountryCode] = useState(null);
   const [odData, setOdData]           = useState(null);
   const [savedId, setSavedId]         = useState(null);
+  // answers pendientes de guardar hasta que llegue el formulario en modo 'despues'
+  const [pendingAnswers, setPendingAnswers] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const g = params.get('g');
-    setMode(g ? 'classroom' : 'ondemand');
-    setGroupCode(g ?? null);
+    setGroupCode(params.get('g') ?? null);
+    setCollectData(params.get('datos') === '1');
     detectCountry().then(setCountryCode);
   }, []);
 
-  // Persist quiz state
   useEffect(() => { localStorage.setItem(LS_STEP, step); }, [step]);
   useEffect(() => { localStorage.setItem(LS_CURRENT_Q, currentQ); }, [currentQ]);
   useEffect(() => { localStorage.setItem(LS_ANSWERS, JSON.stringify(answers)); }, [answers]);
@@ -128,29 +144,49 @@ export default function App() {
     setCommit(null);
     setSavedId(null);
     setOdData(null);
+    setPendingAnswers(null);
+  }
+
+  async function saveAndShowReport(finalAnswers, formData) {
+    const origin = groupCode ? 'classroom' : collectData ? 'ondemand' : 'direct';
+    try {
+      const id = await insertResponse({
+        groupCode,
+        answers: finalAnswers,
+        countryCode,
+        origin,
+        odData: formData ?? odData,
+      });
+      setSavedId(id);
+    } catch (err) {
+      console.error('Error al guardar respuestas:', err);
+    }
+    setStep('report');
   }
 
   async function handleAnswer(questionId, letter) {
     const newAnswers = { ...answers, [questionId]: letter };
     setAnswers(newAnswers);
     const nextIndex = currentQ + 1;
+
     if (nextIndex >= SEQUENCE.length) {
-      setStep('report');
-      try {
-        const id = await insertResponse({
-          groupCode,
-          answers: newAnswers,
-          countryCode,
-          origin: mode ?? 'ondemand',
-          odData,
-        });
-        setSavedId(id);
-      } catch (err) {
-        console.error('Error al guardar respuestas:', err);
+      // Último paso del quiz
+      if (collectData && DATOS_MOMENTO === 'despues') {
+        // Guardar respuestas en espera y pedir formulario
+        setPendingAnswers(newAnswers);
+        setStep('collect');
+      } else {
+        await saveAndShowReport(newAnswers, null);
       }
     } else {
       setCurrentQ(nextIndex);
     }
+  }
+
+  async function handleCollect(formData) {
+    setOdData(formData);
+    await saveAndShowReport(pendingAnswers, formData);
+    setPendingAnswers(null);
   }
 
   function handleStars(n) {
@@ -171,7 +207,7 @@ export default function App() {
       <main className="main-content">
         {step === 'intro' && (
           <IntroScreen
-            mode={mode}
+            collectData={collectData}
             detectedCountry={countryCode}
             onStart={handleStart}
           />
@@ -184,6 +220,13 @@ export default function App() {
             seqIndex={currentQ}
             totalSeq={SEQUENCE.length}
             onAnswer={handleAnswer}
+          />
+        )}
+
+        {step === 'collect' && (
+          <CollectScreen
+            detectedCountry={countryCode}
+            onSubmit={handleCollect}
           />
         )}
 

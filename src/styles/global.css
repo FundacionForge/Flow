@@ -356,6 +356,39 @@ img { max-width: 100%; display: block; }
   color: white;
 }
 
+/* Single-choice hint */
+.question-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: -4px 0 12px;
+  text-align: center;
+}
+
+/* Back button */
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: color .15s, background .15s;
+  width: 100%;
+}
+.back-btn:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--bg);
+}
+.back-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* ─── Report ────────────────────────────────────────────────────────────────── */
 .report-wrapper {
   width: 100%;
@@ -730,6 +763,30 @@ img { max-width: 100%; display: block; }
   margin-bottom: 16px;
 }
 .print-btn:hover {
+  background: #f3f4f6;
+  border-color: var(--border-focus);
+}
+
+/* Email button */
+.email-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s, border-color .15s;
+  margin-bottom: 16px;
+}
+.email-btn:hover {
   background: #f3f4f6;
   border-color: var(--border-focus);
 }

@@ -220,6 +220,14 @@ export default function App() {
             seqIndex={currentQ}
             totalSeq={SEQUENCE.length}
             onAnswer={handleAnswer}
+            prevAnswer={answers[questionId] ?? null}
+            onBack={() => {
+              if (currentQ > 0) {
+                setCurrentQ(currentQ - 1);
+              } else {
+                setStep('intro');
+              }
+            }}
           />
         )}
 
@@ -238,6 +246,7 @@ export default function App() {
             commitment={commitment}
             onCommitment={handleCommitment}
             onReset={handleReset}
+            email={odData?.email ?? null}
           />
         )}
       </main>

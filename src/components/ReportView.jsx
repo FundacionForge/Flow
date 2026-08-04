@@ -18,7 +18,7 @@ function buildHeadline(activadorKey, frenoKey) {
   return `${actLargo}${complementoA}`;
 }
 
-export default function ReportView({ answers, stars, onStars, commitment, onCommitment, onReset }) {
+export default function ReportView({ answers, stars, onStars, commitment, onCommitment, onReset, email }) {
   const zones = calcZoneScores(answers);
   const { activadorPrincipal, frenoPrincipal } = calcTitleParts(answers);
   const { activadores, frenos } = calcPills(answers);
@@ -32,6 +32,37 @@ export default function ReportView({ answers, stars, onStars, commitment, onComm
 
   function handlePrint() {
     window.print();
+  }
+
+  function buildMailtoLink() {
+    const subject = encodeURIComponent('Tu reporte FLOW - Fundación Forge');
+    const actLines = activadores.map(a => `  ✓ ${a.label}`).join('\n');
+    const frenoLines = frenos.map(f => `  ⚠ ${f.label}`).join('\n');
+    const zoneLines = Object.entries(zones)
+      .map(([z, pct]) => `  ${z}: ${pct}%`)
+      .join('\n');
+    const body = encodeURIComponent(
+`Hola,
+
+Aquí está tu reporte FLOW de Fundación Forge:
+
+📌 ${headline}
+
+⚡ Lo que te enciende:
+${actLines}
+
+⚠️ Lo que te apaga:
+${frenoLines}
+
+📊 Tus zonas de aprendizaje:
+${zoneLines}
+
+Podés ver tu reporte completo en: ${window.location.origin}
+
+¡Seguí aprendiendo!
+Equipo Fundación Forge`
+    );
+    return `mailto:${email}?subject=${subject}&body=${body}`;
   }
 
   return (
@@ -99,6 +130,13 @@ export default function ReportView({ answers, stars, onStars, commitment, onComm
           <button className="print-btn" onClick={handlePrint}>
             🖨️ Imprimir / Descargar PDF
           </button>
+
+          {/* Email (solo si hay email disponible) */}
+          {email && (
+            <a className="email-btn" href={buildMailtoLink()}>
+              ✉️ Enviar reporte a mi email
+            </a>
+          )}
 
           {/* Reset temporal para pruebas */}
           {onReset && (

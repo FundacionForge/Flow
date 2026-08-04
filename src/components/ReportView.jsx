@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { calcZoneScores, calcTitleParts, calcPills } from '../data/scoring.js';
 import { TITLE_TEXTS, FRENO_TEXTS } from '../data/reportContent.js';
 import StarRating from './StarRating.jsx';
@@ -29,6 +30,15 @@ export default function ReportView({ answers, stars, onStars, commitment, onComm
   );
 
   const reportUnlocked = stars !== null;
+  const unlockedRef = useRef(null);
+
+  useEffect(() => {
+    if (reportUnlocked && unlockedRef.current) {
+      setTimeout(() => {
+        unlockedRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
+    }
+  }, [reportUnlocked]);
 
   function handlePrint() {
     window.print();
@@ -115,7 +125,7 @@ Equipo Fundación Forge`
           </div>
         </div>
       ) : (
-        <div className="report-unlocked">
+        <div className="report-unlocked" ref={unlockedRef}>
           {/* Zone cards */}
           <div className="zone-cards">
             {Object.entries(zones).map(([zone, pct]) => (

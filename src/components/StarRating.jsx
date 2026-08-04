@@ -1,7 +1,14 @@
 export default function StarRating({ value, onChange }) {
   return (
     <div className="star-rating-block">
-      <p className="star-question">¿Te identificas con lo que dice tu reporte hasta aquí?</p>
+      <p className="star-question">¿Te identificás con lo que dice tu reporte hasta aquí?</p>
+
+      {!value && (
+        <p className="star-unlock-hint">
+          🔒 Valorá el reporte para desbloquear el análisis completo
+        </p>
+      )}
+
       <div className="stars-row">
         {[1, 2, 3, 4, 5].map((n) => (
           <button
@@ -14,9 +21,10 @@ export default function StarRating({ value, onChange }) {
           </button>
         ))}
       </div>
+
       {value && (
         <p className="star-thanks">
-          ¡Gracias! Tu valoración nos ayuda a mejorar.
+          ✅ ¡Gracias! Ahora podés ver el análisis completo.
         </p>
       )}
     </div>

@@ -508,10 +508,23 @@ img { max-width: 100%; display: block; }
   filter: none;
 }
 
+.star-unlock-hint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-text);
+  background: var(--green-bg);
+  border: 1px solid var(--green-border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin: 0 0 14px;
+  display: inline-block;
+}
+
 .star-thanks {
   font-size: 13px;
   color: var(--text-muted);
   margin-top: 12px;
+  font-weight: 500;
 }
 
 /* Locked overlay */

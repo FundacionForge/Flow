@@ -3,7 +3,7 @@ export default function StarRating({ value, onChange }) {
     <div className="star-rating-block">
       {!value && (
         <p className="star-unlock-hint">
-          🔒 Valorá el reporte para desbloquear el análisis completo
+          🔒 Danos tu valoración para desbloquear el análisis completo
         </p>
       )}
 

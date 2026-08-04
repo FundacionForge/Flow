@@ -148,10 +148,17 @@ Equipo Fundación Forge`
             </a>
           )}
 
-          {/* Reset temporal para pruebas */}
           {onReset && (
-            <button className="reset-btn" onClick={onReset}>
-              ↺ Volver al inicio (resetear)
+            <button
+              className="reset-btn"
+              onClick={() => {
+                const ok = window.confirm(
+                  '¿Seguro que querés reiniciar?\n\nSe borrarán todas tus respuestas y tu reporte actual. Esta acción no se puede deshacer.'
+                );
+                if (ok) onReset();
+              }}
+            >
+              ↺ Reiniciar cuestionario
             </button>
           )}
         </div>

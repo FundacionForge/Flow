@@ -7,7 +7,7 @@ export default function StarRating({ value, onChange }) {
         </p>
       )}
 
-      <p className="star-question">¿Te identificás con lo que dice tu reporte hasta aquí?</p>
+      <p className="star-question">¿Te identificas con lo que dice tu reporte hasta aquí?</p>
 
       <div className="stars-row">
         {[1, 2, 3, 4, 5].map((n) => (
@@ -24,7 +24,7 @@ export default function StarRating({ value, onChange }) {
 
       {value && (
         <p className="star-thanks">
-          ✅ ¡Gracias! Ahora podés ver el análisis completo.
+          ✅ ¡Gracias! Ahora puedes ver el análisis completo.
         </p>
       )}
     </div>

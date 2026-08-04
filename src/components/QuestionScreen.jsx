@@ -37,7 +37,7 @@ export default function QuestionScreen({ questionId, seqIndex, totalSeq, onAnswe
             )}
             <p className="question-text">{q.question}</p>
 
-            <p className="question-hint">Elegí la opción que mejor te describe. Solo podés elegir una.</p>
+            <p className="question-hint">Elige la opción que mejor te describe. Solo puedes elegir una.</p>
 
             <div className="options-list">
               {Object.entries(q.options).map(([letter, text]) => (

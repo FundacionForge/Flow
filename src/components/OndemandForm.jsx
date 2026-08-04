@@ -61,7 +61,7 @@ export default function OndemandForm({ detectedCountry, onSubmit, submitLabel = 
 
   return (
     <form className="od-form" onSubmit={handleSubmit} noValidate>
-      <p className="od-form-title">Antes de empezar, completá tus datos</p>
+      <p className="od-form-title">Antes de empezar, completa tus datos</p>
 
       <div className="od-row">
         <div className="od-field">
@@ -104,7 +104,7 @@ export default function OndemandForm({ detectedCountry, onSubmit, submitLabel = 
             onChange={ev => set('country', ev.target.value)}
             className={errors.country ? 'error' : ''}
           >
-            <option value="">Seleccioná tu país</option>
+            <option value="">Selecciona tu país</option>
             {COUNTRIES.map(c => (
               <option key={c.code} value={c.code}>{c.name}</option>
             ))}

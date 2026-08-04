@@ -38,10 +38,10 @@ export default function TeacherRegister({ email, onRegistered }) {
 
   function validate() {
     const e = {};
-    if (!form.firstName.trim())    e.firstName   = 'Ingresá tu nombre.';
-    if (!form.lastName.trim())     e.lastName    = 'Ingresá tu apellido.';
-    if (!form.institution.trim())  e.institution = 'Ingresá el nombre de tu institución.';
-    if (!form.countryCode)         e.countryCode = 'Seleccioná tu país.';
+    if (!form.firstName.trim())    e.firstName   = 'Ingresa tu nombre.';
+    if (!form.lastName.trim())     e.lastName    = 'Ingresa tu apellido.';
+    if (!form.institution.trim())  e.institution = 'Ingresa el nombre de tu institución.';
+    if (!form.countryCode)         e.countryCode = 'Selecciona tu país.';
     return e;
   }
 
@@ -56,7 +56,7 @@ export default function TeacherRegister({ email, onRegistered }) {
       const profile = await createTeacherProfile({ ...form, name, email });
       onRegistered(profile);
     } catch {
-      setServerErr('Ocurrió un error. Por favor intentá de nuevo.');
+      setServerErr('Ocurrió un error. Por favor intenta de nuevo.');
     } finally {
       setLoad(false);
     }
@@ -64,9 +64,9 @@ export default function TeacherRegister({ email, onRegistered }) {
 
   return (
     <div className="teacher-card">
-      <h2 className="teacher-card-title">Completá tu perfil</h2>
+      <h2 className="teacher-card-title">Completa tu perfil</h2>
       <p className="teacher-card-desc">
-        Es la primera vez que ingresás. Necesitamos algunos datos para crear tu cuenta.
+        Es la primera vez que ingresas. Necesitamos algunos datos para crear tu cuenta.
       </p>
       <form className="teacher-form" onSubmit={handleSubmit}>
         <div className="teacher-row-two">

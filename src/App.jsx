@@ -89,7 +89,7 @@ function CollectScreen({ detectedCountry, onSubmit }) {
           ¡Listo! Ya terminaste el cuestionario
         </h1>
         <p className="intro-desc">
-          Antes de ver tu reporte, completá estos datos. Solo los usamos para mejorar el programa.
+          Antes de ver tu reporte, completa estos datos. Solo los usamos para mejorar el programa.
         </p>
         <OndemandForm detectedCountry={detectedCountry} onSubmit={onSubmit} submitLabel="Ver mis resultados →" />
       </div>

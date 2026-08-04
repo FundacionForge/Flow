@@ -68,7 +68,7 @@ function ShareModal({ group, onClose }) {
   }
 
   const waText = encodeURIComponent(
-    `Hola! Completá el cuestionario FLOW de Fundación Forge para el grupo "${group.name}":\n${link}`
+    `Hola! Completa el cuestionario FLOW de Fundación Forge para el grupo "${group.name}":\n${link}`
   );
 
   return (
@@ -110,7 +110,7 @@ function NewGroupModal({ teacher, onCreated, onClose }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!name.trim()) { setError('Ingresá un nombre para el grupo.'); return; }
+    if (!name.trim()) { setError('Ingresa un nombre para el grupo.'); return; }
     setLoad(true);
     try {
       const group = await createGroup(name.trim(), teacher.id);

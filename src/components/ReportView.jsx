@@ -67,7 +67,7 @@ ${frenoLines}
 📊 Tus zonas de aprendizaje:
 ${zoneLines}
 
-Podés ver tu reporte completo en: ${window.location.origin}
+Puedes ver tu reporte completo en: ${window.location.origin}
 
 ¡Seguí aprendiendo!
 Equipo Fundación Forge`
@@ -153,7 +153,7 @@ Equipo Fundación Forge`
               className="reset-btn"
               onClick={() => {
                 const ok = window.confirm(
-                  '¿Seguro que querés reiniciar?\n\nSe borrarán todas tus respuestas y tu reporte actual. Esta acción no se puede deshacer.'
+                  '¿Seguro que quieres reiniciar?\n\nSe borrarán todas tus respuestas y tu reporte actual. Esta acción no se puede deshacer.'
                 );
                 if (ok) onReset();
               }}

@@ -10,7 +10,7 @@ export default function TeacherLogin() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Ingresá un email válido.');
+      setError('Ingresa un email válido.');
       return;
     }
     setLoad(true);
@@ -19,7 +19,7 @@ export default function TeacherLogin() {
       await sendMagicLink(email.trim());
       setSent(true);
     } catch (err) {
-      setError('No se pudo enviar el link. Intentá de nuevo.');
+      setError('No se pudo enviar el link. Intenta de nuevo.');
     } finally {
       setLoad(false);
     }
@@ -29,13 +29,13 @@ export default function TeacherLogin() {
     return (
       <div className="teacher-card teacher-card-center">
         <div className="teacher-sent-icon">📬</div>
-        <h2 className="teacher-card-title">¡Revisá tu email!</h2>
+        <h2 className="teacher-card-title">¡Revisa tu email!</h2>
         <p className="teacher-card-desc">
           Te enviamos un link de acceso a <strong>{email}</strong>.
-          <br />Hacé clic en el link para ingresar al panel de docentes.
+          <br />Haz clic en el link para ingresar al panel de docentes.
         </p>
         <p className="teacher-card-note">
-          El link es válido por 72 horas. Si no lo ves, revisá la carpeta de spam.
+          El link es válido por 72 horas. Si no lo ves, revisa la carpeta de spam.
         </p>
       </div>
     );
@@ -45,7 +45,7 @@ export default function TeacherLogin() {
     <div className="teacher-card teacher-card-center">
       <h2 className="teacher-card-title">Panel de docentes</h2>
       <p className="teacher-card-desc">
-        Ingresá tu email y te enviamos un link de acceso. No necesitás contraseña.
+        Ingresa tu email y te enviamos un link de acceso. No necesitas contraseña.
       </p>
       <form className="teacher-form" onSubmit={handleSubmit}>
         <div className="teacher-field">

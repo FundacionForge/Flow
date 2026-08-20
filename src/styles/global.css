@@ -27,7 +27,7 @@
   --font-title: 'Poppins', sans-serif;
   --font-body: 'Inter', sans-serif;
   --max-w: 600px;
-  --header-h: 64px;
+  --header-h: 80px;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────────────────────── */
@@ -64,17 +64,16 @@ img { max-width: 100%; display: block; }
   flex-shrink: 0;
 }
 .header-logo-flow {
-  height: 36px;
+  height: 52px;
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
 .header-logo-forge {
-  height: 36px;
+  height: 44px;
   width: auto;
   object-fit: contain;
-  filter: invert(1);
-  mix-blend-mode: screen;
+  filter: brightness(0) invert(1);
 }
 
 /* ─── Main content area ─────────────────────────────────────────────────────── */
@@ -1347,8 +1346,8 @@ img { max-width: 100%; display: block; }
   padding: 12px 24px;
   gap: 16px;
 }
-.logo-header .header-logo-flow  { height: 32px; filter: brightness(0) invert(1); }
-.logo-header .header-logo-forge { height: 32px; filter: invert(1); mix-blend-mode: screen; }
+.logo-header .header-logo-flow  { height: 44px; filter: brightness(0) invert(1); }
+.logo-header .header-logo-forge { height: 36px; filter: brightness(0) invert(1); }
 .report-title-bar {
   background: var(--surface);
   border-bottom: 1.5px solid var(--border);

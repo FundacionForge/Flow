@@ -48,17 +48,14 @@ export async function forgeLogEvent(gameUserId, event) {
   await post('/api/v1/GameUserEvents', { gameUserId, event });
 }
 
-// Logs a question answer. answer format: "qNum.optionNum" e.g. "4.3" = P4, option C.
+// Logs a question answer. event format: "answer:qNum.optionNum" e.g. "answer:4.3" = P4, option C.
 export async function forgeLogAnswer(gameUserId, questionId, seqIndex, letter) {
   if (!gameUserId) return;
-  const qNum    = seqIndex + 1;
-  const optNum  = LETTER_INDEX[letter] ?? 0;
-  await post('/api/v1/GameUserLogs', {
+  const qNum   = seqIndex + 1;
+  const optNum = LETTER_INDEX[letter] ?? 0;
+  await post('/api/v1/GameUserEvents', {
     gameUserId,
-    key:        questionId,           // "P4"
-    answer:     `${qNum}.${optNum}`,  // "4.3"
-    event:      'answer',
-    externalId: qNum,
+    event: `answer:${qNum}.${optNum}`,
   });
 }
 
@@ -68,12 +65,10 @@ export async function forgeLogBack(gameUserId, questionId, seqIndex, prevLetter)
   if (!gameUserId) return;
   const qNum   = seqIndex + 1;
   const optNum = prevLetter ? (LETTER_INDEX[prevLetter] ?? 0) : null;
-  await post('/api/v1/GameUserLogs', {
+  const suffix = optNum ? `:${qNum}.${optNum}` : `:${qNum}`;
+  await post('/api/v1/GameUserEvents', {
     gameUserId,
-    key:        questionId,
-    answer:     optNum ? `${qNum}.${optNum}` : null,
-    event:      'back',
-    externalId: qNum,
+    event: `back${suffix}`,
   });
 }
 

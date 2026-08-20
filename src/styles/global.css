@@ -70,7 +70,7 @@ img { max-width: 100%; display: block; }
   filter: brightness(0) invert(1);
 }
 .header-logo-forge {
-  height: 52px;
+  height: 68px;
   width: auto;
   object-fit: contain;
   filter: invert(1);

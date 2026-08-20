@@ -1,4 +1,4 @@
-const BASE  = import.meta.env.VITE_FORGE_API_BASE;
+const BASE  = (import.meta.env.VITE_FORGE_API_BASE ?? '').replace(/\/$/, '');
 const GAME_ID = 11;
 
 const LETTER_INDEX = { A: 1, B: 2, C: 3, D: 4 };

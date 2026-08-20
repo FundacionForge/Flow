@@ -125,6 +125,10 @@ export default function App() {
     setGroupCode(params.get('g') ?? null);
     setCollectData(params.get('datos') === '1');
     detectCountry().then(setCountryCode);
+    forgeCreateSession().then(sessionId => {
+      setForgeSessionId(sessionId);
+      forgeLogEvent(sessionId, 'SESSION_START');
+    });
   }, []);
 
   useEffect(() => { localStorage.setItem(LS_STEP, step); }, [step]);
@@ -139,8 +143,7 @@ export default function App() {
 
   async function handleStart(formData) {
     if (formData) setOdData(formData);
-    const sessionId = await forgeCreateSession();
-    setForgeSessionId(sessionId);
+    const sessionId = forgeSessionId;
     forgeLogEvent(sessionId, 'quiz_started');
     if (formData) {
       forgeRegisterUser(sessionId, {

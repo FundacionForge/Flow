@@ -6,6 +6,13 @@ import OndemandForm from './components/OndemandForm.jsx';
 import { detectCountry } from './services/geoip.js';
 import { insertResponse, updateStars, updateCommitment } from './services/responses.js';
 import { DATOS_MOMENTO } from './config.js';
+import {
+  forgeCreateSession,
+  forgeLogEvent,
+  forgeLogAnswer,
+  forgeLogBack,
+  forgeRegisterUser,
+} from './services/forgeApi.js';
 
 const LS_ANSWERS    = 'flow_answers';
 const LS_STARS      = 'flow_stars';
@@ -110,8 +117,8 @@ export default function App() {
   const [countryCode, setCountryCode] = useState(null);
   const [odData, setOdData]           = useState(null);
   const [savedId, setSavedId]         = useState(null);
-  // answers pendientes de guardar hasta que llegue el formulario en modo 'despues'
   const [pendingAnswers, setPendingAnswers] = useState(null);
+  const [forgeSessionId, setForgeSessionId] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -130,12 +137,25 @@ export default function App() {
     if (commitment) localStorage.setItem(LS_COMMITMENT, commitment);
   }, [commitment]);
 
-  function handleStart(formData) {
+  async function handleStart(formData) {
     if (formData) setOdData(formData);
+    const sessionId = await forgeCreateSession();
+    setForgeSessionId(sessionId);
+    forgeLogEvent(sessionId, 'quiz_started');
+    if (formData) {
+      forgeRegisterUser(sessionId, {
+        name:     formData.name,
+        lastname: formData.lastname,
+        email:    formData.email,
+        age:      formData.age,
+        country:  formData.country,
+      });
+    }
     setStep('quiz');
   }
 
   function handleReset() {
+    forgeLogEvent(forgeSessionId, 'quiz_reset');
     [LS_STEP, LS_CURRENT_Q, LS_ANSWERS, LS_STARS, LS_COMMITMENT].forEach(k => localStorage.removeItem(k));
     setStep('intro');
     setCurrentQ(0);
@@ -145,10 +165,12 @@ export default function App() {
     setSavedId(null);
     setOdData(null);
     setPendingAnswers(null);
+    setForgeSessionId(null);
   }
 
   async function saveAndShowReport(finalAnswers, formData) {
     const origin = groupCode ? 'classroom' : collectData ? 'ondemand' : 'direct';
+    forgeLogEvent(forgeSessionId, 'quiz_completed');
     try {
       const id = await insertResponse({
         groupCode,
@@ -161,10 +183,12 @@ export default function App() {
     } catch (err) {
       console.error('Error al guardar respuestas:', err);
     }
+    forgeLogEvent(forgeSessionId, 'report_viewed');
     setStep('report');
   }
 
   async function handleAnswer(questionId, letter) {
+    forgeLogAnswer(forgeSessionId, questionId, currentQ, letter);
     const newAnswers = { ...answers, [questionId]: letter };
     setAnswers(newAnswers);
     const nextIndex = currentQ + 1;
@@ -185,6 +209,13 @@ export default function App() {
 
   async function handleCollect(formData) {
     setOdData(formData);
+    forgeRegisterUser(forgeSessionId, {
+      name:     formData.name,
+      lastname: formData.lastname,
+      email:    formData.email,
+      age:      formData.age,
+      country:  formData.country,
+    });
     await saveAndShowReport(pendingAnswers, formData);
     setPendingAnswers(null);
   }
@@ -192,11 +223,13 @@ export default function App() {
   function handleStars(n) {
     setStars(n);
     updateStars(savedId, n);
+    forgeLogEvent(forgeSessionId, `stars_rated_${n}`);
   }
 
   function handleCommitment(opt) {
     setCommit(opt);
     updateCommitment(savedId, opt);
+    forgeLogEvent(forgeSessionId, `commitment_selected`);
   }
 
   const questionId = SEQUENCE[currentQ];
@@ -222,6 +255,7 @@ export default function App() {
             onAnswer={handleAnswer}
             prevAnswer={answers[questionId] ?? null}
             onBack={() => {
+              forgeLogBack(forgeSessionId, questionId, currentQ, answers[questionId] ?? null);
               if (currentQ > 0) {
                 setCurrentQ(currentQ - 1);
               } else {

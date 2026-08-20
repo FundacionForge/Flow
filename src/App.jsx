@@ -13,6 +13,7 @@ import {
   forgeLogBack,
   forgeRegisterUser,
 } from './services/forgeApi.js';
+import { COMMITMENT_OPTIONS } from './data/reportContent.js';
 
 const LS_ANSWERS    = 'flow_answers';
 const LS_STARS      = 'flow_stars';
@@ -232,7 +233,7 @@ export default function App() {
   function handleCommitment(opt) {
     setCommit(opt);
     updateCommitment(savedId, opt);
-    forgeLogEvent(forgeSessionId, `commitment_selected:${opt}`);
+    forgeLogEvent(forgeSessionId, `commitment_selected:${COMMITMENT_OPTIONS.indexOf(opt) + 1}`);
   }
 
   const questionId = SEQUENCE[currentQ];

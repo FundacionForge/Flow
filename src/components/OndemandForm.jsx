@@ -61,8 +61,6 @@ export default function OndemandForm({ detectedCountry, onSubmit, submitLabel = 
 
   return (
     <form className="od-form" onSubmit={handleSubmit} noValidate>
-      <p className="od-form-title">Antes de empezar, completa tus datos</p>
-
       <div className="od-row">
         <div className="od-field">
           <label htmlFor="od-name">Nombre</label>

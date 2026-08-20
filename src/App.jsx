@@ -232,7 +232,7 @@ export default function App() {
   function handleCommitment(opt) {
     setCommit(opt);
     updateCommitment(savedId, opt);
-    forgeLogEvent(forgeSessionId, `commitment_selected`);
+    forgeLogEvent(forgeSessionId, `commitment_selected:${opt}`);
   }
 
   const questionId = SEQUENCE[currentQ];

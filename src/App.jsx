@@ -14,6 +14,7 @@ import {
   forgeRegisterUser,
 } from './services/forgeApi.js';
 import { COMMITMENT_OPTIONS } from './data/reportContent.js';
+import { calcZoneScores, calcPills } from './data/scoring.js';
 
 const LS_ANSWERS    = 'flow_answers';
 const LS_STARS      = 'flow_stars';
@@ -175,6 +176,15 @@ export default function App() {
   async function saveAndShowReport(finalAnswers, formData) {
     const origin = groupCode ? 'classroom' : collectData ? 'ondemand' : 'direct';
     forgeLogEvent(forgeSessionId, 'quiz_completed');
+
+    const zones = calcZoneScores(finalAnswers);
+    Object.entries(zones).forEach(([zone, score]) => {
+      forgeLogEvent(forgeSessionId, `zona:${zone}:${score}`);
+    });
+    const { activadores, frenos } = calcPills(finalAnswers);
+    activadores.forEach(a => forgeLogEvent(forgeSessionId, `activador:${a.key}`));
+    frenos.forEach(f => forgeLogEvent(forgeSessionId, `freno:${f.key}`));
+
     try {
       const id = await insertResponse({
         groupCode,

@@ -675,7 +675,8 @@ img { max-width: 100%; display: block; }
 
 /* Commitment screen */
 .commitment-block {
-  background: var(--white);
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
   border-radius: var(--radius);
   padding: 24px 20px 20px;
   box-shadow: var(--shadow-sm);

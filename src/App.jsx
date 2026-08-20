@@ -284,6 +284,7 @@ export default function App() {
             onCommitment={handleCommitment}
             onReset={handleReset}
             email={odData?.email ?? null}
+            onPrint={() => forgeLogEvent(forgeSessionId, 'report_downloaded')}
           />
         )}
       </main>

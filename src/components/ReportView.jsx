@@ -19,7 +19,7 @@ function buildHeadline(activadorKey, frenoKey) {
   return `${actLargo}${complementoA}`;
 }
 
-export default function ReportView({ answers, stars, onStars, commitment, onCommitment, onReset, email }) {
+export default function ReportView({ answers, stars, onStars, commitment, onCommitment, onReset, email, onPrint }) {
   const zones = calcZoneScores(answers);
   const { activadorPrincipal, frenoPrincipal } = calcTitleParts(answers);
   const { activadores, frenos } = calcPills(answers);
@@ -41,6 +41,7 @@ export default function ReportView({ answers, stars, onStars, commitment, onComm
   }, [reportUnlocked]);
 
   function handlePrint() {
+    if (onPrint) onPrint();
     window.print();
   }
 

@@ -28,7 +28,7 @@ export default function QuestionScreen({ questionId, seqIndex, totalSeq, onAnswe
       <ProgressBar current={displayNumber} total={totalSeq} />
       <div className="quiz-area">
         <div className="question-slide" key={questionId}>
-          <div className="question-card">
+          <div className={`question-card${isMyth ? ' question-card--quick' : ''}`}>
             {isMyth && (
               <span className="myth-badge">🤔 Una pregunta rápida</span>
             )}
@@ -37,7 +37,7 @@ export default function QuestionScreen({ questionId, seqIndex, totalSeq, onAnswe
             )}
             <p className="question-text">{q.question}</p>
 
-            <p className="question-hint">Elige la opción que mejor te describe. Solo puedes elegir una.</p>
+            <p className="question-hint">Pensando en lo que haces con mayor frecuencia, ¿cuál de estas opciones te representa mejor?</p>
 
             <div className="options-list">
               {Object.entries(q.options).map(([letter, text]) => (

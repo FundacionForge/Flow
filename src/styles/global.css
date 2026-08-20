@@ -256,6 +256,11 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow-sm);
 }
 
+.question-card--quick {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
 /* myth badge */
 .myth-badge {
   display: inline-flex;

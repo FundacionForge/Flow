@@ -30,7 +30,6 @@ export default function ZoneBar({ zone, pct }) {
             style={{ width: `${pct}%` }}
           />
         </div>
-        <div className="zone-bar-pct">{pct}%</div>
       </div>
       <p className="zone-text">{texto}</p>
       <button

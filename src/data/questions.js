@@ -29,7 +29,7 @@ export const QUESTIONS = {
   P3: {
     type: 'question',
     zone: 'CONECTAR',
-    situation: 'Un profesor, un amigo/a o alguien en el trabajo te cuenta una idea o concepto que nunca habías visto antes y te llama la atención. Te gustarías aprender más sobre eso.',
+    situation: 'Un profesor, un amigo/a o alguien en el trabajo te cuenta una idea o concepto que nunca habías visto antes y te llama la atención. Te gustaría aprender más sobre eso.',
     question: '¿Qué suele ayudarte más a aprender algo que te interesa?',
     options: {
       A: 'Buscar ejemplos concretos o casos reales',
@@ -75,7 +75,7 @@ export const QUESTIONS = {
   P6: {
     type: 'question',
     zone: 'EXPLORAR',
-    situation: 'Hay una materia, tema o habilidad que siempre te resultó difícil. Una vez más estás en el colegio o en el trabajo y te ves obligado a ponerla en práctica.',
+    situation: 'Hay una materia, tema o habilidad que siempre te resultó difícil. Una vez más estás estudiando o en el trabajo y te ves obligado a ponerla en práctica.',
     question: 'Cuando tienes que volver a enfrentarte con eso, ¿qué pensamiento aparece primero?',
     options: {
       A: "'Esto no es lo mío, nunca lo voy a entender'",
@@ -168,10 +168,10 @@ export const QUESTIONS = {
   },
   M3: {
     type: 'myth',
-    question: '¿Qué es lo que más te preocupa cuando piensas en lo que viene después de la escuela?',
+    question: '¿Qué es lo que más te preocupa de tu futuro?',
     options: {
       A: 'No saber de qué voy a trabajar',
-      B: 'No tener experiencia cuando salga',
+      B: 'No tener experiencia laboral',
       C: 'No saber si voy a poder estudiar lo que quiero',
       D: 'No me preocupa mucho todavía, ya veré',
     },

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SEQUENCE } from './data/questions.js';
 import QuestionScreen from './components/QuestionScreen.jsx';
 import ReportView from './components/ReportView.jsx';
+import { SocialReview } from './components/social-review';
 import OndemandForm from './components/OndemandForm.jsx';
 import { detectCountry } from './services/geoip.js';
 import { insertResponse, updateStars, updateCommitment } from './services/responses.js';
@@ -21,6 +22,12 @@ const LS_STARS      = 'flow_stars';
 const LS_COMMITMENT = 'flow_commitment';
 const LS_STEP       = 'flow_step';
 const LS_CURRENT_Q  = 'flow_currentQ';
+
+// Dispara SocialReview una sola vez por sesión, con lo que ocurra primero:
+const SOCIAL_REVIEW_DELAY_AFTER_COMMITMENT_MS = 5000;
+const SOCIAL_REVIEW_DELAY_AFTER_STARS_MS      = 15000;
+const SOCIAL_REVIEW_DELAY_AFTER_REPORT_MS     = 30000;
+const SOCIAL_REVIEW_API_BASE = (import.meta.env.VITE_FORGE_API_BASE ?? '').replace(/\/$/, '') || 'mock';
 
 function loadState() {
   try {
@@ -122,6 +129,35 @@ export default function App() {
   const [pendingAnswers, setPendingAnswers] = useState(null);
   const [forgeSessionId, setForgeSessionId] = useState(null);
 
+  const [showSocialReview, setShowSocialReview] = useState(false);
+  const reviewTriggeredRef = useRef(false); // se dispara una sola vez por sesión
+  const reviewTimerCommitmentRef = useRef(null);
+  const reviewTimerStarsRef = useRef(null);
+  const reviewTimerReportRef = useRef(null);
+
+  function clearReviewTimers() {
+    [reviewTimerCommitmentRef, reviewTimerStarsRef, reviewTimerReportRef].forEach((ref) => {
+      if (ref.current) clearTimeout(ref.current);
+      ref.current = null;
+    });
+  }
+
+  // Programa el trigger de SocialReview una sola vez por timerRef. Cuando el
+  // primero de los tres vence, gana: dispara el modal y cancela los otros dos.
+  function scheduleReviewOnce(timerRef, delayMs) {
+    if (reviewTriggeredRef.current || timerRef.current) return;
+    timerRef.current = setTimeout(() => {
+      if (reviewTriggeredRef.current) return;
+      reviewTriggeredRef.current = true;
+      clearReviewTimers();
+      setShowSocialReview(true);
+    }, delayMs);
+  }
+
+  useEffect(() => {
+    return () => clearReviewTimers();
+  }, []);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setGroupCode(params.get('g') ?? null);
@@ -171,6 +207,10 @@ export default function App() {
     setOdData(null);
     setPendingAnswers(null);
     setForgeSessionId(null);
+
+    clearReviewTimers();
+    reviewTriggeredRef.current = false;
+    setShowSocialReview(false);
   }
 
   async function saveAndShowReport(finalAnswers, formData) {
@@ -199,6 +239,7 @@ export default function App() {
     }
     forgeLogEvent(forgeSessionId, 'report_viewed');
     setStep('report');
+    scheduleReviewOnce(reviewTimerReportRef, SOCIAL_REVIEW_DELAY_AFTER_REPORT_MS);
   }
 
   async function handleAnswer(questionId, letter) {
@@ -238,12 +279,14 @@ export default function App() {
     setStars(n);
     updateStars(savedId, n);
     forgeLogEvent(forgeSessionId, `stars_rated_${n}`);
+    scheduleReviewOnce(reviewTimerStarsRef, SOCIAL_REVIEW_DELAY_AFTER_STARS_MS);
   }
 
   function handleCommitment(opt) {
     setCommit(opt);
     updateCommitment(savedId, opt);
     forgeLogEvent(forgeSessionId, `commitment_selected:${COMMITMENT_OPTIONS.indexOf(opt) + 1}`);
+    scheduleReviewOnce(reviewTimerCommitmentRef, SOCIAL_REVIEW_DELAY_AFTER_COMMITMENT_MS);
   }
 
   const questionId = SEQUENCE[currentQ];
@@ -299,6 +342,15 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Si no hay apiBaseUrl real (modo mock), no hace falta esperar a forgeSessionId */}
+      {showSocialReview && (SOCIAL_REVIEW_API_BASE === 'mock' || forgeSessionId) && (
+        <SocialReview
+          gameUserId={forgeSessionId ?? 'dev-session'}
+          apiBaseUrl={SOCIAL_REVIEW_API_BASE}
+          onClose={() => setShowSocialReview(false)}
+        />
+      )}
     </div>
   );
 }

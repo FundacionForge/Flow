@@ -5,7 +5,6 @@ import ReportView from './components/ReportView.jsx';
 import { SocialReview } from './components/social-review';
 import OndemandForm from './components/OndemandForm.jsx';
 import { detectCountry } from './services/geoip.js';
-import { insertResponse, updateStars, updateCommitment } from './services/responses.js';
 import { DATOS_MOMENTO } from './config.js';
 import {
   forgeCreateSession,
@@ -121,11 +120,9 @@ export default function App() {
   const [stars, setStars]       = useState(init.stars);
   const [commitment, setCommit] = useState(init.commitment);
 
-  const [groupCode, setGroupCode]     = useState(null);
   const [collectData, setCollectData] = useState(false);
   const [countryCode, setCountryCode] = useState(null);
   const [odData, setOdData]           = useState(null);
-  const [savedId, setSavedId]         = useState(null);
   const [pendingAnswers, setPendingAnswers] = useState(null);
   const [forgeSessionId, setForgeSessionId] = useState(null);
   const sessionRequestedRef = useRef(false); // evita crear 2 sesiones por el doble-montaje de StrictMode
@@ -161,7 +158,6 @@ export default function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setGroupCode(params.get('g') ?? null);
     setCollectData(params.get('datos') === '1');
     detectCountry().then(setCountryCode);
 
@@ -208,7 +204,6 @@ export default function App() {
     setAnswers({});
     setStars(null);
     setCommit(null);
-    setSavedId(null);
     setOdData(null);
     setPendingAnswers(null);
     setForgeSessionId(null);
@@ -218,8 +213,7 @@ export default function App() {
     setShowSocialReview(false);
   }
 
-  async function saveAndShowReport(finalAnswers, formData) {
-    const origin = groupCode ? 'classroom' : collectData ? 'ondemand' : 'direct';
+  async function saveAndShowReport(finalAnswers) {
     forgeLogEvent(forgeSessionId, 'quiz_completed');
 
     const zones = calcZoneScores(finalAnswers);
@@ -230,18 +224,6 @@ export default function App() {
     activadores.forEach(a => forgeLogEvent(forgeSessionId, `activador:${a.key}`));
     frenos.forEach(f => forgeLogEvent(forgeSessionId, `freno:${f.key}`));
 
-    try {
-      const id = await insertResponse({
-        groupCode,
-        answers: finalAnswers,
-        countryCode,
-        origin,
-        odData: formData ?? odData,
-      });
-      setSavedId(id);
-    } catch (err) {
-      console.error('Error al guardar respuestas:', err);
-    }
     forgeLogEvent(forgeSessionId, 'report_viewed');
     setStep('report');
     scheduleReviewOnce(reviewTimerReportRef, SOCIAL_REVIEW_DELAY_AFTER_REPORT_MS);
@@ -260,7 +242,7 @@ export default function App() {
         setPendingAnswers(newAnswers);
         setStep('collect');
       } else {
-        await saveAndShowReport(newAnswers, null);
+        await saveAndShowReport(newAnswers);
       }
     } else {
       setCurrentQ(nextIndex);
@@ -276,20 +258,18 @@ export default function App() {
       age:      formData.age,
       country:  formData.country,
     });
-    await saveAndShowReport(pendingAnswers, formData);
+    await saveAndShowReport(pendingAnswers);
     setPendingAnswers(null);
   }
 
   function handleStars(n) {
     setStars(n);
-    updateStars(savedId, n);
     forgeLogEvent(forgeSessionId, `stars_rated_${n}`);
     scheduleReviewOnce(reviewTimerStarsRef, SOCIAL_REVIEW_DELAY_AFTER_STARS_MS);
   }
 
   function handleCommitment(opt) {
     setCommit(opt);
-    updateCommitment(savedId, opt);
     forgeLogEvent(forgeSessionId, `commitment_selected:${COMMITMENT_OPTIONS.indexOf(opt) + 1}`);
     scheduleReviewOnce(reviewTimerCommitmentRef, SOCIAL_REVIEW_DELAY_AFTER_COMMITMENT_MS);
   }

@@ -1,0 +1,172 @@
+.social-review-overlay {
+  --social-review-bg: #F5F0E8;
+  --social-review-accent: #F97316;
+  --social-review-text: #1A1A1A;
+  --social-review-radius: 20px;
+  --social-review-border: #D0C9BC;
+  --social-review-idle-color: #BDBDBD;
+  --social-review-idle-bg: #F0F0F0;
+  --social-review-active-color: #F97316;
+  --social-review-active-bg: #FFF3E0;
+
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.social-review-panel {
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  background: var(--social-review-bg);
+  border-radius: var(--social-review-radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  padding: 32px;
+  margin: 16px;
+  outline: none;
+}
+
+.social-review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.social-review-icon-action {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--social-review-text);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.social-review-icon-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.social-review-icon-action:focus-visible {
+  outline: 2px solid var(--social-review-accent);
+  outline-offset: 2px;
+}
+
+.social-review-title {
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+  color: var(--social-review-text);
+  margin: 0 0 24px;
+}
+
+.social-review-icons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.social-review-icon-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 150ms ease;
+}
+
+.social-review-icon-btn.is-active {
+  outline: 2px solid var(--social-review-accent);
+  outline-offset: 2px;
+  transform: scale(1.14);
+}
+
+.social-review-icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.social-review-icon-btn:focus-visible {
+  outline: 2px solid var(--social-review-accent);
+  outline-offset: 2px;
+}
+
+.social-review-textarea-wrap {
+  margin: 16px 0;
+  animation: social-review-fade-slide 220ms ease-out;
+}
+
+.social-review-textarea {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid var(--social-review-border);
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.social-review-textarea:focus-visible {
+  outline: 2px solid var(--social-review-accent);
+  outline-offset: 2px;
+}
+
+.social-review-error {
+  color: #B91C1C;
+  font-size: 14px;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.social-review-submit-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--social-review-accent);
+  color: #FFFFFF;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 48px;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.social-review-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.social-review-submit-btn:focus-visible {
+  outline: 2px solid var(--social-review-text);
+  outline-offset: 2px;
+}
+
+.social-review-success {
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--social-review-text);
+  padding: 24px 0;
+  margin: 0;
+}
+
+@keyframes social-review-fade-slide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

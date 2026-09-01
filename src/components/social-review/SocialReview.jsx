@@ -177,10 +177,10 @@ export function SocialReview({ gameUserId, apiBaseUrl, onSuccess, onClose }) {
             <button
               type="button"
               className="social-review-submit-btn"
-              disabled={selectedIndex === null || status === 'submitting'}
+              disabled={selectedIndex === null || status === 'submitting' || !gameUserId}
               onClick={handleSubmit}
             >
-              {status === 'submitting' ? 'Enviando…' : 'ENVIAR'}
+              {!gameUserId ? 'Preparando…' : status === 'submitting' ? 'Enviando…' : 'ENVIAR'}
             </button>
           </>
         )}

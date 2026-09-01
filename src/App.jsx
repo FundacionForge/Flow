@@ -128,6 +128,7 @@ export default function App() {
   const [savedId, setSavedId]         = useState(null);
   const [pendingAnswers, setPendingAnswers] = useState(null);
   const [forgeSessionId, setForgeSessionId] = useState(null);
+  const sessionRequestedRef = useRef(false); // evita crear 2 sesiones por el doble-montaje de StrictMode
 
   const [showSocialReview, setShowSocialReview] = useState(false);
   const reviewTriggeredRef = useRef(false); // se dispara una sola vez por sesión
@@ -163,6 +164,10 @@ export default function App() {
     setGroupCode(params.get('g') ?? null);
     setCollectData(params.get('datos') === '1');
     detectCountry().then(setCountryCode);
+
+    if (sessionRequestedRef.current) return;
+    sessionRequestedRef.current = true;
+
     forgeCreateSession().then(sessionId => {
       setForgeSessionId(sessionId);
       forgeLogEvent(sessionId, 'SESSION_START');
@@ -343,10 +348,11 @@ export default function App() {
         )}
       </main>
 
-      {/* Si no hay apiBaseUrl real (modo mock), no hace falta esperar a forgeSessionId */}
-      {showSocialReview && (SOCIAL_REVIEW_API_BASE === 'mock' || forgeSessionId) && (
+      {/* No espera a forgeSessionId: si tarda en resolver, el POST falla una
+          vez y el usuario puede reintentar (para entonces ya suele estar listo). */}
+      {showSocialReview && (
         <SocialReview
-          gameUserId={forgeSessionId ?? 'dev-session'}
+          gameUserId={forgeSessionId ?? ''}
           apiBaseUrl={SOCIAL_REVIEW_API_BASE}
           onClose={() => setShowSocialReview(false)}
         />
